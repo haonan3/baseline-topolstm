@@ -13,29 +13,27 @@ def load_graph(data_dir):
         seen_nodes = [x.strip() for x in f]
 
     # builds node index
-    node_index = {v: i for i, v in enumerate(seen_nodes)}
-    index_node = {i: v for i, v in enumerate(seen_nodes)}
+    index_node = []
+    node_index = {}
+    for i, v in enumerate(seen_nodes):
+        node_index[v] = i
+        index_node.append(int(v))
 
     # loads graph
-    graph_file = os.path.join(data_dir, 'graph_new.txt')
-    pkl_file = os.path.join(data_dir, 'graph.pkl')
+    graph_file = os.path.join(data_dir, 'author-1900-2020-link-all_copy.txt')
 
-    if os.path.isfile(pkl_file):
-        G = pickle.load(open(pkl_file, 'rb'))
-    else:
-        G = nx.Graph()
-        G.name = data_dir
-        n_nodes = len(node_index)
-        G.add_nodes_from(range(n_nodes))  # the node index is continuous
-        with open(graph_file, 'rb') as f:
-            # f.next()
-            for line in f:  # graph_file ===> link.txt
-                u, v = line.strip().split()
-                if (u in node_index) and (v in node_index): # check whether the edge is valid
-                    u = node_index[u]
-                    v = node_index[v]
-                    G.add_edge(u, v)
-        # pickle.dump(G, open(pkl_file, 'wb'))
+    G = nx.Graph()
+    G.name = data_dir
+    n_nodes = len(node_index)
+    G.add_nodes_from(range(n_nodes))  # the node index is continuous
+    with open(graph_file, 'rb') as f:
+        for line in f:
+            token = ",".encode('utf-8')
+            u, v = line.strip().split(token)
+            if (u in node_index) and (v in node_index): # check whether the edge is valid
+                u = node_index[u]
+                v = node_index[v]
+                G.add_edge(u, v)
 
     return G, node_index, index_node
 
@@ -175,29 +173,22 @@ def load_examples(data_dir, dataset=None, G=None, node_index=None, maxlen=None, 
     Return: list of example tuples
     """
 
-    pkl_path = os.path.join(data_dir, dataset + '.pkl')
-    if os.path.isfile(pkl_path):
-        print('pickle exists.')
-        examples = pickle.load(open(pkl_path, 'rb'))
-    else:
-        # loads cascades
-        filename = os.path.join(data_dir, dataset + '.txt')
-        examples = []
-        with codecs.open(filename, 'r', encoding='utf-8') as input_file:
-            for line_index, line in enumerate(input_file):
-                # parses the input line.
-                query, cascade = line.strip().split(' ', 1) # max split time: 1
-                sequence = [query] + cascade.split(' ')[::2]
-                # TODO : This needs to checked and fixed !!
-                #if maxlen is not None and len(sequence) > maxlen:
-                #    continue
-                #else:
-                sequence = sequence[:maxlen]
-                sequence = [node_index[bytes(x,'utf-8')] for x in sequence]
-                sub_examples = convert_cascade_to_examples_train(sequence, G=G)
-                examples.extend(sub_examples)
+    # loads cascades
+    filename = os.path.join(data_dir, dataset + '.txt')
+    examples = []
+    with codecs.open(filename, 'r', encoding='utf-8') as input_file:
+        for line_index, line in enumerate(input_file):
+            # parses the input line to sequence
+            sequence = line.strip().split(' ')
+            # TODO : This needs to checked and fixed !!
+            #if maxlen is not None and len(sequence) > maxlen:
+            #    continue
+            #else:
+            sequence = sequence[:maxlen]
+            sequence = [node_index[bytes(x,'utf-8')] for x in sequence]
+            sub_examples = convert_cascade_to_examples_train(sequence, G=G)
+            examples.extend(sub_examples)
 
-        # pickle.dump(examples, open(pkl_path, 'wb'))
 
     n_samples = len(examples)
     print (n_samples)

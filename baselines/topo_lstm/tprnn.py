@@ -161,23 +161,25 @@ def evaluate(f_prob, test_loader, k_list=[10, 50, 100]):
     return [-1]
 
 
-def save_embedding(embed, node_index, path, binary=True):
+def save_embedding(embed, index_node, path, binary=False):
     learned_embed = gensim.models.keyedvectors.Word2VecKeyedVectors(embed.shape[1])
-    learned_embed.add(node_index, embed)
-    learned_embed.save_word2vec_format(fname=path, binary=binary, total_vec=len(node_index))
+    learned_embed.add(index_node, embed)
+    learned_embed.save_word2vec_format(fname=path, binary=binary, total_vec=len(index_node))
 
-def train(data_dir='../../data/'+dataset_name+'/',
-          dim_proj=64, # was 512
+
+def train(data_dir='../../../author_graph_dataset/',
+          dim_proj=100, # was 512
           maxlen=30,  # was 50
           batch_size=256,
           keep_ratio=1.,
           shuffle_data=True,
           learning_rate=0.001,
-          global_steps= 100, # 20000, # was 50000
+          global_steps= 50, # 20000, # was 50000
           disp_freq=20,
           save_freq=200,
           test_freq=50,
           saveto_file='params.npz',
+          embed_file='../topolstm_embedding.txt',
           weight_decay=0.0005,
           reload_model=False,
           train=True):
@@ -294,9 +296,9 @@ def train(data_dir='../../data/'+dataset_name+'/',
     scores = evaluate(model['f_prob'], test_loader)
     print('eval scores: ', scores)
 
-    print('Save embedding')
+    print('Save embedding...')
     embed = model['embs'].get_value()
-    save_embedding(embed, node_index)
+    save_embedding(embed, index_node, path=embed_file)
 
 
 
