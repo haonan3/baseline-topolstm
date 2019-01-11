@@ -171,11 +171,11 @@ def save_embedding(embed, index_node, path, binary=False):
 def train(data_dir='../author_graph_dataset/',
           dim_proj=100, # was 512
           maxlen=100,  # was 50
-          batch_size=256,
+          batch_size=512, #256,
           keep_ratio=1.,
           shuffle_data=True,
           learning_rate=0.001,
-          global_steps= 100000, # 20000, # was 50000
+          global_steps= 20000, # 20000, # was 50000
           disp_freq=200,
           save_freq=20000,
           #test_freq=50,
@@ -265,9 +265,12 @@ def train(data_dir='../author_graph_dataset/',
         n_examples = len(train_examples)
         batches_per_epoch = n_examples // options['batch_size'] + 1
         n_epochs = global_steps // batches_per_epoch + 1
-        print ("# epochs", n_epochs)
         global_step = 0
         cost_history = []
+
+        print("# num of examples", n_examples)
+        print("# epochs", n_epochs)
+        print("# batches per epoch", batches_per_epoch)
         for ep in range(n_epochs):
             print("Ep", ep + 1)
             for _ in range(batches_per_epoch):
