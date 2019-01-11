@@ -7,20 +7,24 @@ import timeit
 import six.moves.cPickle as pickle
 import downhill
 
-from topo_lstm import data_utils
-from topo_lstm import tprnn_model
+import data_utils
+import tprnn_model
 from datetime import datetime
 
 # sys.path.append('../../')
 # LOG_DIR = "log/"
-today = datetime.today()
-dataset_name = 'christianity'
-is_next_node_prediction = False
-
 # log_file = LOG_DIR + '%s_%s_%s_%s.log' % (dataset_name, str(today.year), str(today.month), str(today.day))
 # log_level = logging.INFO
 # logging.basicConfig(filename=log_file, level=log_level, format='%(asctime)s - %(levelname)s: %(message)s',
 #                     datefmt='%m/%d/%Y %H:%M:%S')
+
+
+
+today = datetime.today()
+dataset_name = 'christianity'
+is_next_node_prediction = False
+
+
 
 from eval_metrics import *
 
@@ -164,7 +168,7 @@ def save_embedding(embed, index_node, path, binary=False):
     learned_embed.save_word2vec_format(fname=path, binary=binary, total_vec=len(index_node))
 
 
-def train(data_dir='../../../author_graph_dataset/',
+def train(data_dir='../author_graph_dataset/',
           dim_proj=100, # was 512
           maxlen=30,  # was 50
           batch_size=256,
