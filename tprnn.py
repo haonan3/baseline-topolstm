@@ -170,17 +170,17 @@ def save_embedding(embed, index_node, path, binary=False):
 
 def train(data_dir='../author_graph_dataset/',
           dim_proj=100, # was 512
-          maxlen=30,  # was 50
+          maxlen=100,  # was 50
           batch_size=256,
           keep_ratio=1.,
           shuffle_data=True,
           learning_rate=0.001,
-          global_steps= 50, # 20000, # was 50000
-          disp_freq=20,
-          save_freq=200,
-          test_freq=50,
+          global_steps= 100000, # 20000, # was 50000
+          disp_freq=200,
+          save_freq=20000,
+          #test_freq=50,
           saveto_file='params.npz',
-          embed_file='../topolstm_embedding.txt',
+          embed_file='topolstm_embedding.txt',
           weight_decay=0.0005,
           reload_model=False,
           train=True):
@@ -211,20 +211,20 @@ def train(data_dir='../author_graph_dataset/',
     print('Building model...')
     model = tprnn_model.build_model(tparams, options)
 
-    print('Loading test data from eval_set.txt ...')
-    test_examples = data_utils.load_eval_examples(data_dir,
-                                                  dataset='eval_set',
-                                                  node_index=node_index,
-                                                  maxlen=maxlen,
-                                                  G=G)
-    test_loader = data_utils.Loader(test_examples, options=options, train=False)
-    print('Loaded %d test examples' % len(test_examples))
+    # print('Loading test data from eval_set.txt ...')
+    # test_examples = data_utils.load_eval_examples(data_dir,
+    #                                               dataset='eval_set',
+    #                                               node_index=node_index,
+    #                                               maxlen=maxlen,
+    #                                               G=G)
+    # test_loader = data_utils.Loader(test_examples, options=options, train=False)
+    # print('Loaded %d test examples' % len(test_examples))
 
     if train:
         # prepares training data.
         print('Loading train data...')
         train_examples = data_utils.load_examples(data_dir,
-                                                  dataset='train_new',
+                                                  dataset='active_sequence',
                                                   keep_ratio=options['keep_ratio'],
                                                   node_index=node_index,
                                                   maxlen=maxlen,
@@ -286,16 +286,16 @@ def train(data_dir='../author_graph_dataset/',
                     pickle.dump(options, open('%s.pkl' % saveto, 'wb'), -1)
 
                 # evaluate on test data.
-                if global_step % test_freq == 0:
-                    scores = evaluate(model['f_prob'], test_loader)
-                    print('eval scores: ', scores)
-                    end_time = timeit.default_timer()
-                    logging.info('time used: %d seconds.' % (end_time - start_time))
+                # if global_step % test_freq == 0:
+                #     scores = evaluate(model['f_prob'], test_loader)
+                #     print('eval scores: ', scores)
+                #     end_time = timeit.default_timer()
+                #     logging.info('time used: %d seconds.' % (end_time - start_time))
 
                 global_step += 1
 
-    scores = evaluate(model['f_prob'], test_loader)
-    print('eval scores: ', scores)
+    #scores = evaluate(model['f_prob'], test_loader)
+    #print('eval scores: ', scores)
 
     print('Save embedding...')
     embed = model['embs'].get_value()
