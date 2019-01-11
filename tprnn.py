@@ -224,7 +224,7 @@ def train(data_dir='../author_graph_dataset/',
         # prepares training data.
         print('Loading train data...')
         train_examples = data_utils.load_examples(data_dir,
-                                                  dataset='active_sequence',
+                                                  dataset='active_sequence_new',
                                                   keep_ratio=options['keep_ratio'],
                                                   node_index=node_index,
                                                   maxlen=maxlen,
