@@ -138,7 +138,7 @@ def convert_cascade_to_examples(sequence, target_set=None, G=None, inference=Fal
 
 ## TODO: Added code here.
 def load_eval_examples(data_dir, dataset=None, G=None, node_index=None, maxlen=None, keep_ratio=1.):
-    pkl_path = os.path.join(data_dir, dataset + '.pkl')
+    # pkl_path = os.path.join(data_dir, dataset + '.pkl')
     filename = os.path.join(data_dir, dataset + '.txt')
     examples = []
     with codecs.open(filename, 'r', encoding='utf-8') as input_file:
@@ -175,6 +175,7 @@ def load_examples(data_dir, dataset=None, G=None, node_index=None, maxlen=None, 
 
     # loads cascades
     filename = os.path.join(data_dir, dataset + '.txt')
+    print("load data from file: " + filename)
     examples = []
     with codecs.open(filename, 'r', encoding='utf-8') as input_file:
         for line_index, line in enumerate(input_file):
