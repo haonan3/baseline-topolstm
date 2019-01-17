@@ -170,7 +170,7 @@ def save_embedding(embed, index_node, path, binary=False):
 
 def train(data_dir='../author_graph_dataset/',
           dim_proj=100, # was 512
-          maxlen=1000,  # was 50
+          maxlen=50,  # was 50
           batch_size=256, #256,
           keep_ratio=1.,
           shuffle_data=True,
@@ -224,7 +224,7 @@ def train(data_dir='../author_graph_dataset/',
         # prepares training data.
         print('Loading train data...')
         train_examples = data_utils.load_examples(data_dir,
-                                                  dataset='processed_diff',
+                                                  dataset='shuffled_diff_seq',
                                                   keep_ratio=options['keep_ratio'],
                                                   node_index=node_index,
                                                   maxlen=maxlen,
