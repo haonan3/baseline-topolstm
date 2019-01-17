@@ -170,17 +170,17 @@ def save_embedding(embed, index_node, path, binary=False):
 
 def train(data_dir='../author_graph_dataset/',
           dim_proj=100, # was 512
-          maxlen=100,  # was 50
-          batch_size=1024, #256,
+          maxlen=1000,  # was 50
+          batch_size=256, #256,
           keep_ratio=1.,
           shuffle_data=True,
           learning_rate=0.001,
-          global_steps= 50000, # 20000, # was 50000
+          global_steps= 60000, # 20000, # was 50000
           disp_freq=200,
           save_freq=20000,
           #test_freq=50,
           saveto_file='params.npz',
-          embed_file='topolstm_embedding.txt',
+          embed_file='topolstm_diff_embedding.txt',
           weight_decay=0.0005,
           reload_model=False,
           train=True):
@@ -224,7 +224,7 @@ def train(data_dir='../author_graph_dataset/',
         # prepares training data.
         print('Loading train data...')
         train_examples = data_utils.load_examples(data_dir,
-                                                  dataset='active_sequence_new',
+                                                  dataset='processed_diff',
                                                   keep_ratio=options['keep_ratio'],
                                                   node_index=node_index,
                                                   maxlen=maxlen,

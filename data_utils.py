@@ -8,7 +8,7 @@ from theano import config
 
 def load_graph(data_dir):
     # loads nodes observed in any cascade.
-    node_file = os.path.join(data_dir, 'seen_nodes.txt')
+    node_file = os.path.join(data_dir, 'diff_seen_nodes.txt')
     with open(node_file, 'rb') as f:
         seen_nodes = [x.strip() for x in f]
 
@@ -20,7 +20,7 @@ def load_graph(data_dir):
         index_node.append(int(v))
 
     # loads graph
-    graph_file = os.path.join(data_dir, 'author-1900-2020-link-all_copy.txt')
+    graph_file = os.path.join(data_dir, 'diff_graph.txt')
 
     G = nx.Graph()
     G.name = data_dir
